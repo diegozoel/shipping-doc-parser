@@ -1,5 +1,9 @@
 # Shipping Doc Parser
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat&logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-22c55e?style=flat)
+![Status](https://img.shields.io/badge/Status-Phase%201%20Complete-blue?style=flat)
+
 An ETL pipeline that extracts structured data from shipping note PDFs and consolidates it into a single Excel matrix. Built to replace a fully manual, copy-paste workflow in the logistics operations of a Fortune 500 electronics manufacturing company.
 
 ## The Problem
@@ -36,7 +40,7 @@ fixtures/
 └── generated/              Pre-generated sample PDFs (ready to use)
 ```
 
-**How extraction works:** The pipeline does not rely on absolute coordinates or visual parsing. Instead, it uses contextual text patterns — extracting values that follow known labels (e.g., the number after `"Cantidad:"`) and filtering noise from overlapping column text that `pdfplumber` reads in the same block. This makes the extraction resilient to minor layout variations across document versions.
+**How extraction works:** The pipeline does not rely on absolute coordinates or visual parsing. Instead, it uses contextual text patterns — extracting values that follow known labels and filtering noise from overlapping column text that `pdfplumber` reads in the same block. For example, when the extracted text contains `Cantidad: 150`, the regex captures `150` as the quantity. When adjacent columns produce overlapping text like `Cantidad: 150 Battery: No` in a single line, exclusion rules ensure only the expected value is captured. This makes the extraction resilient to minor layout variations across document versions.
 
 **Layout detection:** Each shipping note uses one of two layouts. The `detect_layout()` function determines which one by checking for specific text markers in the document. Each movement module then delegates to the appropriate handler (`_handle_simple_layout` or `_handle_full_layout`).
 
